@@ -1,18 +1,37 @@
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';
-import { Parallax } from 'react-parallax';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect, useState } from 'react';
 import { PlayCircle } from 'lucide-react';
-import { FaInstragram, FaTelegram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaTelegram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 export default function Home() {
   const [flippedCard, setFlippedCard] = useState(null);
 
-  const handleCardFlip = (cardNumber) => {
-    setFlippedCard(flippedCard === cardNumber ? null : cardNumber);
+  const handleCardFlip = (index) => {
+    setFlippedCard(flippedCard === index ? null : index);
   };
+
+  const [viewportWidth, setViewportWidth] = useState(0);
+
+  const roles = ['Role 1', 'Role 2', 'Role 3', 'Role 4', 'Role 5', 'Role 6', 'Role 7', 'Role 8'];
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setViewportWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setViewportWidth(window.innerWidth);
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []);
 
   const { ref: aboutRef, inView: aboutInView } = useInView({
     triggerOnce: true,
@@ -61,13 +80,12 @@ export default function Home() {
         <title>Growtopia Private Server</title>
       </Head>
 
-      {/* Parallax Background */}
-      <Parallax
-        bgImage="/gtps-bg.png"
-        strength={500}
-        className="h-screen w-full flex flex-col justify-between text-white bg-cover"
+      {/* Background */}
+      <div
+        style={{ backgroundImage: 'url(/gtps-bg.png)', backgroundSize: 'cover' }}
+        className="h-screen w-full flex flex-col justify-between text-white bg-cover relative"
       >
-
+        <div className="absolute inset-0 bg-gray-900 opacity-70"></div>
         {/* Navbar */}
         <Navbar />
 
@@ -78,7 +96,11 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <img src="gtps-hero-logo.png" alt="Growtopia Private Server" className="object-contain w-96 mb-2" />
+            <img
+              src="gtps-hero-logo.png"
+              alt="Growtopia Private Server"
+              className="object-contain w-96 mb-2 glow-effect"
+            />
           </motion.div>
           <motion.button
             className="btn btn-outline btn-lg mt-4 flex items-center space-x-2"
@@ -90,7 +112,7 @@ export default function Home() {
             <span>Watch Trailer</span>
           </motion.button>
         </div>
-      </Parallax>
+      </div>
 
       {/* About Section with animation */}
       <div ref={aboutRef} className="bg-gray-900 text-center py-24">
@@ -103,7 +125,7 @@ export default function Home() {
           <div className="container mx-auto px-6">
             <motion.h2
               variants={itemVariants}
-              className="text-4xl font-bold mb-8 text-center flex items-center justify-center tracking-widest font-[family-name:var(--font-bolden-bold)]"
+              className="text-4xl font-bold mb-2 text-center flex items-center justify-center tracking-widest font-[family-name:var(--font-bolden-bold)]"
             >
               <motion.span
                 variants={lineVariants}
@@ -119,16 +141,13 @@ export default function Home() {
               variants={itemVariants}
               className="text-center max-w-3xl mx-auto text-lg leading-relaxed"
             >
-              Immerse yourself in Chumbi Valley; an enchanting and mystical play-to-earn blockchain
-              game with intriguing and adorable NFT creatures known as Chumbi. Explore the uncharted
-              forest, start a farm, grow crops and craft special items with your Chumbi companions by
-              your side, while earning crypto rewards.
+              Growtopia Private Server offers a unique and customizable gaming experience where you can create your own virtual world. Unlike public servers, private servers allow you to control the rules, economy, and overall atmosphere of the game.
             </motion.p>
           </div>
         </motion.section>
       </div>
 
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
+      <div className="flex flex-col items-center justify-center bg-gray-900">
         <motion.h2
           variants={itemVariants}
           className="text-4xl font-bold mb-8 text-center flex items-center justify-center tracking-widest font-[family-name:var(--font-bolden-bold)]"
@@ -144,25 +163,26 @@ export default function Home() {
           ></motion.span>
         </motion.h2>
 
-        <div className="flex justify-center space-x-4">
-          {['Role 1', 'Role 2', 'Role 3'].map((role, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 justify-center items-center mb-20">
+          {roles.map((role, index) => (
             <motion.div
               key={index}
-              className={`w-72 h-96 bg-base-100 shadow-xl flex flex-col justify-center items-center text-center rounded-lg overflow-hidden`}
+              className={`w-52 h-72 md:w-72 md:h-96 bg-base-100 shadow-xl flex flex-col items-center text-center rounded-lg overflow-hidden ${roles.length % 3 !== 0 && index >= roles.length - (roles.length % 3) ? 'md:col-span-1' : ''
+                }`}
               onClick={() => handleCardFlip(index)}
               animate={{ rotateY: flippedCard === index ? 180 : 0 }}
               transition={{ duration: 1.2 }}
             >
               <motion.div
-                className={`absolute w-full h-full flex flex-col justify-end items-center p-4`}
+                className="absolute w-full h-full flex flex-col justify-end items-center p-4"
                 animate={{ rotateY: flippedCard === index ? -180 : 0, opacity: flippedCard === index ? 0 : 1 }}
                 transition={{ rotateY: { duration: 1.2 }, opacity: { delay: 0.4, duration: 0.2 } }}
               >
                 <img src="/gtps-logo.png" alt="Growtopia Private Server Logo" className="w-24 h-24" />
-                <p className='card-title text-2xl tracking-widest font-[family-name:var(--font-bolden-bold)]'>{role} Place Holder</p>
+                <p className="card-title text-sm md:text-2xl tracking-widest font-bold">{role} Place Holder</p>
               </motion.div>
               <motion.div
-                className={`absolute w-full h-full flex flex-col justify-center items-center p-4`}
+                className="absolute w-full h-full flex flex-col justify-center items-center p-4"
                 animate={{ rotateY: flippedCard === index ? -180 : 0, opacity: flippedCard === index ? 1 : 0 }}
                 transition={{ rotateY: { duration: 1.2 }, opacity: { delay: 0.4, duration: 0.2 } }}
               >
@@ -174,52 +194,46 @@ export default function Home() {
       </div>
 
       {/* Footer Section */}
-      <footer class="bg-gray-900 text-gray-400 py-8">
-        <div class="container mx-auto">
-          <div class="flex flex-col md:flex-row justify-between">
-            <div class="mb-4 md:mb-0">
-              <img src="/gtps-logo.png" alt="Growtopiia Private Server Logo" class="w-28 h-28" />
-              <div class="flex space-x-4 items-center text-2xl">
-                <a href="https://twitter.com/YoruAkio" class="text-gray-300 hover:text-gray-200">
+      <footer className="bg-gray-900 text-gray-400 py-8" >
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
+            <div className="mb-4 md:mb-0 order-2 md:order-none">
+              <img src="/gtps-logo.png" alt="Growtopiia Private Server Logo" className="w-28 h-28" />
+              <div className="flex space-x-4 items-center text-2xl order-1 md:order-none mt-4 md:mt-0">
+                <a href="https://twitter.com/YoruAkio" className="text-gray-300 hover:text-gray-200">
                   <FaTwitter />
                 </a>
-                <a href="https://youtube.com/@YoruAkio" class="text-gray-300 hover:text-gray-200">
+                <a href="https://youtube.com/@YoruAkio" className="text-gray-300 hover:text-gray-200">
                   <FaYoutube />
                 </a>
-                <a href="https://instagram.com/venturaps" class="text-gray-300 hover:text-gray-200">
+                <a href="https://instagram.com/venturaps" className="text-gray-300 hover:text-gray-200">
                   <FaTelegram />
                 </a>
               </div>
             </div>
-            <nav class="flex flex-col md:flex-row space-x-4">
+            <nav className="hidden md:flex md:flex-row space-x-4 order-3 md:order-none">
               <div>
-                <h3 class="text-gray-300 font-bold mb-2">Game Features</h3>
+                <h3 className="text-gray-300 font-bold mb-2">Game Features</h3>
                 <ul>
-                  <li><a href="#" class="hover:text-gray-200">Chumbi</a></li>
-                  <li><a href="#" class="hover:text-gray-200">Gallery</a></li>
-                  <li><a href="#" class="hover:text-gray-200">Litepaper</a></li>
-                  <li><a href="#" class="hover:text-gray-200">Whitepaper</a></li>
-                  <li><a href="#" class="hover:text-gray-200">Lore</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Server Infomation</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Player Viewer</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Economy Statistics</a></li>
+                  <li><a href="#" className="hover:text-gray-200">World of The Day</a></li>
                 </ul>
               </div>
               <div>
-                <h3 class="text-gray-300 font-bold mb-2">Marketplace</h3>
+                <h3 className="text-gray-300 font-bold mb-2">Marketplace</h3>
                 <ul>
-                  <li><a href="#" class="hover:text-gray-200">Chumbi</a></li>
-                  <li><a href="#" class="hover:text-gray-200">Tokens</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="text-gray-300 font-bold mb-2">About</h3>
-                <ul>
-                  <li><a href="#" class="hover:text-gray-200">About Us</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Roles</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Items</a></li>
+                  <li><a href="#" className="hover:text-gray-200">Tokens</a></li>
                 </ul>
               </div>
             </nav>
           </div>
-          <div class="mt-4 flex justify-between">
-            <p class="text-s text-gray-500">Copyright 2024 | @YoruAkio</p>
-            <p class="text-s text-gray-500">Privacy Policy | Terms & Conditions</p>
+          <div className="mt-4 flex justify-center md:justify-between">
+            <p className="text-s text-gray-500">Copyright 2024 | @YoruAkio</p>
+            <p className="hidden md:block text-s text-gray-500">Privacy Policy | Terms & Conditions</p>
           </div>
         </div>
       </footer>
