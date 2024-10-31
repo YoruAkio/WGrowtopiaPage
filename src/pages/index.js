@@ -99,17 +99,17 @@ export default function Home() {
             <img
               src="gtps-hero-logo.png"
               alt="Growtopia Private Server"
-              className="object-contain w-96 mb-2 glow-effect"
+              className="object-contain mb-2 glow-effect w-96 sm:w-72 md:w-96 lg:w-128"
             />
           </motion.div>
           <motion.button
-            className="btn btn-outline btn-lg mt-4 flex items-center space-x-2"
+            className="btn btn-outline btn-lg mt-4 flex items-center space-x-2 md:btn-xl md:mt-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.2 }}
           >
-            <PlayCircle className="w-6 h-6" />
-            <span>Watch Trailer</span>
+            <PlayCircle className="w-6 h-6 md:w-8 md:h-8" />
+            <a href='https://www.youtube.com/watch?v=ZfZnWkq-4t8' className="text-sm md:text-lg">Watch Trailer</a>
           </motion.button>
         </div>
       </div>
